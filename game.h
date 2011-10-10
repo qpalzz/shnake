@@ -8,10 +8,11 @@ class Game {
         Cell f[HEIGHT][WIDTH];
 
         int score;
+        GameState state;
         Direction direct;
 
-        Tail head;
-        Tail point;
+        Tail *head;
+        Tail *point;
 
     protected:
         void InitGraphic();

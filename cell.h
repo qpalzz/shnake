@@ -17,6 +17,7 @@ class Cell {
         void SetType(Type t);
         Type GetType() const;
         void Draw();
+        void GetPoint(GLfloat n[3]);
 };
 
 #endif // CELL_H_INCLUDED

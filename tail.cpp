@@ -36,9 +36,25 @@ Type Tail::MoveHead(Cell f[HEIGHT][WIDTH])
 
     int step_i, step_j;
     GetNext(&step_i, &step_j);
-    if (f[step_i][step_j].GetType() != CLEAN) return f[step_i][step_j].GetType();
+    Type t = f[step_i][step_j].GetType();
     Move(f);
-    return CLEAN;
+    return t;
+}
+
+
+void Tail::SetType(Type t)
+{
+    type = t;
+}
+
+void Tail::SetNext(Tail *n)
+{
+    next = n;
+}
+
+void Tail::GetPoint(Cell f[HEIGHT][WIDTH], GLfloat n[3])
+{
+    f[i][j].GetPoint(n);
 }
 
 // ----------------------- protected ------------------------------
@@ -61,11 +77,11 @@ void Tail::GetNext(int *next_i, int *next_j)
             break;
         case LEFT:
             *next_i = i;
-            *next_j = (j == 0)?WIDTH-1:j;
+            *next_j = (j == 0)?WIDTH-1:j-1;
             break;
         case RIGHT:
             *next_i = i;
-            *next_j = (j == WIDTH-1)?0:j;
+            *next_j = (j == WIDTH-1)?0:j+1;
             break;
         default:
             *next_i = i;

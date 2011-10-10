@@ -51,20 +51,26 @@ Type Cell::GetType() const
 
 void Cell::Draw()
 {
-    GLfloat color_fill[4] = { 0.0, 0.0, 0.0, 0.3 };
-    GLfloat color_border[4] = { 0.0, 0.0, 0.0, 0.6 };
+    GLfloat color_fill[4] = { 0.0, 0.0, 0.0, 1 };
+    GLfloat color_border[4] = { 0.0, 0.0, 0.0, 1 };
     switch (type) {
         case CLEAN:
-            color_fill[2] = 1;
-            color_border[2] = 1;
+            color_fill[2] = 0.5;
+            color_border[2] = 0.7;
             break;
         case TAIL:
-            color_fill[1] = 1;
-            color_border[1] = 1;
+            color_fill[1] = 0.5;
+            color_border[1] = 0.7;
             break;
         case POINT:
-            color_fill[0] = 1;
-            color_border[0] = 1;
+            color_fill[0] = 0.5;
+            color_fill[1] = 0.2;
+            color_border[0] = 0.7;
+            color_border[1] = 0.3;
+            break;
+        case OVER:
+            color_fill[0] = 0.5;
+            color_border[0] = 0.7;
             break;
     }
     glColor4fv(color_fill);
@@ -81,4 +87,12 @@ void Cell::Draw()
         glVertex3fv(c);
         glVertex3fv(d);
     glEnd();
+}
+
+void Cell::GetPoint(GLfloat n[3])
+{
+    n[X] = a[X];
+    n[Y] = a[Y];
+    n[Z] = a[Z];
+
 }

@@ -1,6 +1,7 @@
 #include "game.h"
 
 Game *game;
+static int timeout = 0;
 
 GLvoid display()
 {
@@ -9,7 +10,11 @@ GLvoid display()
 }
 
 GLvoid idle() {
-
+    timeout++;
+    if (timeout > IDLE) {
+        game->Move();
+        timeout = 0;
+    }
 }
 
 GLvoid SetProjectionMatrix(GLsizei width, GLsizei height)
@@ -34,7 +39,7 @@ GLvoid reshape(GLsizei width, GLsizei height)
 
 GLvoid keyDown (unsigned char key, int x, int y)
 {
-    game->Move();
+    printf("key down\n");
 }
 
 GLvoid keyUp (unsigned char key, int x, int y)
@@ -44,7 +49,21 @@ GLvoid keyUp (unsigned char key, int x, int y)
 
 GLvoid specDown (int key, int x, int y)
 {
-
+    switch (key) {
+        case GLUT_KEY_UP:
+            game->SetDirection(DOWN);
+            break;
+        case GLUT_KEY_DOWN:
+            game->SetDirection(UP);
+            break;
+        case GLUT_KEY_LEFT:
+            game->SetDirection(LEFT);
+            break;
+        case GLUT_KEY_RIGHT:
+            game->SetDirection(RIGHT);
+            break;
+    }
+    printf("spec key down\n");
 }
 
 GLvoid specUp (int key, int x, int y)

@@ -24,6 +24,9 @@ class Tail {
                                 // двигает в соответств. направлении,
                                 // если на следующей ячейке не CLEAN, то возвращает ее тип,
                                 // иначе двигает хвост защищенным методом Move
+        void SetType(Type t);
+        void SetNext(Tail *n);
+        void GetPoint(Cell f[HEIGHT][WIDTH], GLfloat n[3]);
 };
 
 #endif // TAIL_H_INCLUDED
