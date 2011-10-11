@@ -14,6 +14,8 @@ class Game {
         Tail *head;
         Tail *point;
 
+        freetype::font_data our_font;
+
     protected:
         void InitGraphic();
         void DrawField();

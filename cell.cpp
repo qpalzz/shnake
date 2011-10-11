@@ -81,13 +81,13 @@ void Cell::Draw()
         glVertex3fv(c);
         glVertex3fv(d);
     glEnd();
-//    glColor4fv(color_border);
-//    glBegin(GL_LINE_LOOP);
-//        glVertex3fv(a);
-//        glVertex3fv(b);
-//        glVertex3fv(c);
-//        glVertex3fv(d);
-//    glEnd();
+    glColor4fv(color_border);
+    glBegin(GL_LINE_LOOP);
+        glVertex3fv(a);
+        glVertex3fv(b);
+        glVertex3fv(c);
+        glVertex3fv(d);
+    glEnd();
 }
 
 void Cell::GetPoint(GLfloat n[3])
