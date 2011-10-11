@@ -27,6 +27,7 @@ class Tail {
         void SetType(Type t);
         void SetNext(Tail *n);
         void GetPoint(Cell f[HEIGHT][WIDTH], GLfloat n[3]);
+        void GetIJ(int *i, int *j);
 };
 
 #endif // TAIL_H_INCLUDED

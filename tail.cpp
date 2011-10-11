@@ -57,6 +57,12 @@ void Tail::GetPoint(Cell f[HEIGHT][WIDTH], GLfloat n[3])
     f[i][j].GetPoint(n);
 }
 
+void Tail::GetIJ(int *_i, int *_j)
+{
+    *_i = i;
+    *_j = j;
+}
+
 // ----------------------- protected ------------------------------
 
 void Tail::ClearProjection(Cell f[HEIGHT][WIDTH])

@@ -39,7 +39,7 @@ GLvoid reshape(GLsizei width, GLsizei height)
 
 GLvoid keyDown (unsigned char key, int x, int y)
 {
-    printf("key down\n");
+
 }
 
 GLvoid keyUp (unsigned char key, int x, int y)
@@ -63,7 +63,6 @@ GLvoid specDown (int key, int x, int y)
             game->SetDirection(RIGHT);
             break;
     }
-    printf("spec key down\n");
 }
 
 GLvoid specUp (int key, int x, int y)

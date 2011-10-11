@@ -13,7 +13,7 @@
 #define CELL_WIDTH  0.5
 #define RADIUS      15
 
-#define IDLE    50000
+#define IDLE    40000
 
 enum Type {
     CLEAN,

@@ -16,6 +16,11 @@ class Game {
 
     protected:
         void InitGraphic();
+        void DrawField();
+        void DrawFace0(); // передняя грань
+        void DrawFace1(); // правая грань
+        void DrawFace2(); // задняя грань
+        void DrawFace3(); // левая грань
     public:
         Game(); // инициализация поля, установка головы и точки
         void Draw(); // вывод на экран поля (проецирование змеи на поле,
