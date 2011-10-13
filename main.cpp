@@ -88,6 +88,8 @@ GLvoid motion(GLsizei x, GLsizei y)
 
 int main(int argc, char** argv)
 {
+	srand(time(NULL));
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(800, 600);

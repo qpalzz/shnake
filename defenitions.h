@@ -6,13 +6,15 @@
 #include <GL/glut.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
+#include <time.h>
 #include "freetype.h"
 
-#define HEIGHT  10
+#define HEIGHT  12
 #define WIDTH   HEIGHT*4
 
-#define CELL_WIDTH  0.7
-#define RADIUS      15
+#define CELL_WIDTH  0.6
+#define RADIUS      19
 
 #define IDLE    40000
 

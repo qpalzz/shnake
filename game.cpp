@@ -6,7 +6,7 @@ Game::Game()
     direct = LEFT;
     state = PLAY;
 
-    our_font.init("AlphaMaleModern.ttf", 16); // Создать шрифт FreeType
+    our_font.init("AlphaMaleModern.ttf", 26); // Создать шрифт FreeType
 
     for (int i = 0; i < HEIGHT; i++) {
         GLfloat a[3],
@@ -101,14 +101,6 @@ Game::Game()
 
 void Game::Draw()
 {
-    head->Projection(f);
-    point->Projection(f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-
-    glColor3ub(0,0xff,0);
-    freetype::print(our_font, 30, 30, "SCORE: %d", score);
-
     GLfloat norm[3];
     head->GetPoint(f,norm);
     GLfloat r = RADIUS / sqrt(norm[X]*norm[X] + norm[Y]*norm[Y] + norm[Z]*norm[Z]);
@@ -116,10 +108,20 @@ void Game::Draw()
     norm[Y] *= r;
     norm[Z] *= r;
 
-	gluLookAt( norm[X],norm[Y],norm[Z], 0,0,0, 0,1,0 );
+    head->Projection(f);
+    point->Projection(f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+
+    gluLookAt( norm[X],norm[Y],norm[Z], 0,0,0, 0,1,0 );
 
     DrawField();
 
+
+    glLoadIdentity();
+
+    glColor3ub(0,0xff,0);
+    freetype::print(our_font, 30, 30, "SCORE: %d", score);
 }
 
 void Game::Move()
