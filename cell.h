@@ -1,7 +1,7 @@
 #ifndef CELL_H_INCLUDED
 #define CELL_H_INCLUDED
 
-#include "defenitions.h"
+#include "defs.h"
 
 class Cell {
     private:
