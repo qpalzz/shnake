@@ -16,6 +16,8 @@ class Game {
 
         freetype::font_data our_font;
 
+        bool moved;
+
     protected:
         void InitGraphic();
         void DrawField();

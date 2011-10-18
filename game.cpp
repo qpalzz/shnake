@@ -127,6 +127,7 @@ void Game::Draw()
 void Game::Move()
 {
     if (state == PLAY) {
+        moved = true;
         head->SetDirection(direct);
 
         Type t = head->MoveHead(f);
@@ -150,9 +151,10 @@ void Game::Move()
 
 void Game::SetDirection(Direction d)
 {
-    if ((d == UP && direct != DOWN) || (d == DOWN && direct != UP) ||
-        (d == RIGHT && direct != LEFT) || (d == LEFT && direct != RIGHT)) {
+    if (moved && ((d == UP && direct != DOWN) || (d == DOWN && direct != UP) ||
+        (d == RIGHT && direct != LEFT) || (d == LEFT && direct != RIGHT))) {
         direct = d;
+        moved = !moved;
     }
 }
 
