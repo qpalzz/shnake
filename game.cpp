@@ -146,7 +146,7 @@ void Game::Move()
             head->SetType(OVER);
         }
     }
-    glutPostRedisplay();
+//    glutPostRedisplay();
 }
 
 void Game::SetDirection(Direction d)

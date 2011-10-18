@@ -1,115 +1,176 @@
 #include "game.h"
 
 Game *game;
-static int timeout = 0;
 
-GLvoid display()
+gint glarea_button_press (GtkWidget*, GdkEventButton*);
+gint glarea_draw  (GtkWidget*, GdkEventExpose*);
+gint glarea_reshape  (GtkWidget*, GdkEventConfigure*);
+gint glarea_init  (GtkWidget*);
+gint glarea_destroy  (GtkWidget*);
+gboolean key_pressed (GtkWidget *widget, GdkEvent  *event, gpointer user_data);
+gboolean timeout_draving_cb(gpointer data);
+gboolean timeout_moving_cb(gpointer data);
+void SetProjectionMatrix(GLsizei, GLsizei);
+void SetModelviewMatrix();
+
+int main(int, char**);
+
+gint glarea_button_press (GtkWidget* widget, GdkEventButton* event)
 {
-    game->Draw();
-    glutSwapBuffers();
-}
-
-GLvoid idle() {
-    timeout++;
-    if (timeout > IDLE) {
-        game->Move();
-        timeout = 0;
+    int x = event->x;
+    int y = event->y;
+    if (event->button == 1) {
+        g_print ("Button 1 press   (%d, %d)\n", x, y);
+        return TRUE;
     }
+    if (event->button == 2) {
+        g_print ("Button 2 press   (%d, %d)\n", x, y);
+        return TRUE;
+    }
+    return FALSE;
 }
 
-GLvoid SetProjectionMatrix(GLsizei width, GLsizei height)
+gint glarea_draw (GtkWidget* widget, GdkEventExpose* event)
+{
+    if (event && event->count > 0) {
+        return(TRUE);
+    }
+    if (gtk_gl_area_make_current(GTK_GL_AREA(widget))) {
+        game->Draw();
+        gtk_gl_area_swapbuffers (GTK_GL_AREA(widget));
+    }
+    return (TRUE);
+}
+
+gint glarea_reshape (GtkWidget* widget, GdkEventConfigure* event)
+{
+    int w = widget->allocation.width;
+    int h = widget->allocation.height;
+    g_print ("Reshape Event\n");
+    if (gtk_gl_area_make_current (GTK_GL_AREA(widget))) {
+        glViewport (0, 0, w, h);
+        SetProjectionMatrix(w, h);
+        SetModelviewMatrix();
+    }
+    return (TRUE);
+}
+
+gint glarea_init (GtkWidget* widget)
+{
+    g_print ("Realize Event\n");
+    if (gtk_gl_area_make_current (GTK_GL_AREA(widget))) {
+        srand(time(NULL));
+        game = new Game();
+        g_timeout_add(120, timeout_moving_cb, widget);
+        g_timeout_add(60, timeout_draving_cb, widget);
+    }
+    return TRUE;
+}
+
+gint glarea_destroy (GtkWidget* widget)
+{
+    g_print ("GTK GL Area Destroy Event\n");
+    // код для освобождения ресурсов
+    return TRUE;
+}
+
+gint key_pressed (GtkWidget *widget, GdkEvent  *event, gpointer user_data)
+{
+    g_print("Key pressed: ");
+    switch (((GdkEventKey*)event)->keyval) {
+        case GDK_KEY_Up: {
+            game->SetDirection(DOWN);
+            g_print("up");
+            break;
+        }
+        case GDK_KEY_Down: {
+            game->SetDirection(UP);
+            g_print("down");
+            break;
+        }
+        case GDK_KEY_Left: {
+            game->SetDirection(LEFT);
+            g_print("left");
+            break;
+        }
+        case GDK_KEY_Right: {
+            game->SetDirection(RIGHT);
+            g_print("right");
+            break;
+        }
+    }
+    g_print("\n");
+    return TRUE;
+}
+
+gboolean timeout_draving_cb(gpointer data)
+{
+    glarea_draw (GTK_WIDGET(data), NULL);
+    return TRUE;
+}
+
+gboolean timeout_moving_cb(gpointer data)
+{
+    game->Move();
+    return TRUE;
+}
+
+void SetProjectionMatrix(GLsizei width, GLsizei height)
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45.0f,width/height,1,-100);
+	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,1,-100);
 }
 
-GLvoid SetModelviewMatrix(){
+void SetModelviewMatrix(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
 
-GLvoid reshape(GLsizei width, GLsizei height)
-{
-	glViewport(0, 0, width, height);
-
-	SetProjectionMatrix(width,height);
-	SetModelviewMatrix();
-}
-
-GLvoid keyDown (unsigned char key, int x, int y)
-{
-
-}
-
-GLvoid keyUp (unsigned char key, int x, int y)
-{
-
-}
-
-GLvoid specDown (int key, int x, int y)
-{
-    switch (key) {
-        case GLUT_KEY_UP:
-            game->SetDirection(DOWN);
-            break;
-        case GLUT_KEY_DOWN:
-            game->SetDirection(UP);
-            break;
-        case GLUT_KEY_LEFT:
-            game->SetDirection(LEFT);
-            break;
-        case GLUT_KEY_RIGHT:
-            game->SetDirection(RIGHT);
-            break;
-    }
-}
-
-GLvoid specUp (int key, int x, int y)
-{
-
-}
-
-GLvoid mouse(GLsizei button, GLsizei state, GLsizei x, GLsizei y)
-{
-	if( state == GLUT_DOWN ) {
-
-	}
-	else if (state == GLUT_UP) {
-
-	}
-}
-
-GLvoid motion(GLsizei x, GLsizei y)
-{
-
-}
-
-
 int main(int argc, char** argv)
 {
-	srand(time(NULL));
+	GtkWidget* window;
+    GtkWidget* box_main;
+    GtkWidget* glarea;
+    int attrlist[] = {
+            GDK_GL_RGBA,
+            GDK_GL_DOUBLEBUFFER,
+            GDK_GL_DEPTH_SIZE, 2,
+            GDK_GL_NONE
+        };
+    gtk_init (&argc, &argv);
+    if(gdk_gl_query() == FALSE) {
+        g_print("OpenGL not supported!\n");
+        return (1);
+    }
 
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(800, 600);
-	glutInitWindowPosition(100, 100);
-	glutCreateWindow("Shnake");
+    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title (GTK_WINDOW(window), "Shnake");
+    gtk_quit_add_destroy (1, GTK_OBJECT(window));
+    gtk_signal_connect (GTK_OBJECT(window), "delete_event",  G_CALLBACK(gtk_main_quit),  NULL);
+    gtk_signal_connect (GTK_OBJECT (window), "destroy",   G_CALLBACK(gtk_main_quit),  NULL);
+    gtk_container_set_border_width (GTK_CONTAINER(window), 5);
+    gtk_widget_show (window);
 
-    game = new Game();
+    box_main = gtk_vbox_new (FALSE, 10);
+    gtk_container_add (GTK_CONTAINER(window), box_main);
+    gtk_widget_show (box_main);
 
-	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
-	glutIdleFunc(idle);
+    glarea = gtk_gl_area_new(attrlist);
+    gtk_widget_set_events(GTK_WIDGET(glarea),
+                          GDK_EXPOSURE_MASK|
+                          GDK_BUTTON_PRESS_MASK);
+    gtk_signal_connect (GTK_OBJECT(glarea), "button_press_event", G_CALLBACK(glarea_button_press),  NULL);
+    gtk_signal_connect (GTK_OBJECT(glarea), "expose_event",  G_CALLBACK(glarea_draw),   NULL);
+    gtk_signal_connect (GTK_OBJECT(glarea), "configure_event", G_CALLBACK(glarea_reshape),  NULL);
+    gtk_signal_connect (GTK_OBJECT(glarea), "realize",  G_CALLBACK(glarea_init),   NULL);
+    gtk_signal_connect (GTK_OBJECT(glarea), "destroy",  G_CALLBACK (glarea_destroy),  NULL);
+    gtk_signal_connect (GTK_OBJECT(window), "key-press-event",  G_CALLBACK (key_pressed),  NULL);
+    gtk_widget_set_usize(GTK_WIDGET(glarea), 700, 700);
+    gtk_box_pack_start (GTK_BOX(box_main), glarea,      FALSE, TRUE, 0);
+    gtk_widget_show (glarea);
 
-	glutKeyboardFunc(keyDown);
-	glutKeyboardUpFunc(keyUp);
-	glutSpecialFunc(specDown);
-	glutSpecialUpFunc(specUp);
+    gtk_main ();
 
-	glutMouseFunc(mouse);
-	glutMotionFunc(motion);
-
-	glutMainLoop();
-	return 0;
+    return (0);
 }
