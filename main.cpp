@@ -62,7 +62,7 @@ gint glarea_init (GtkWidget* widget)
         srand(time(NULL));
         game = new Game();
         g_timeout_add(120, timeout_moving_cb, widget);
-        g_timeout_add(60, timeout_draving_cb, widget);
+        g_timeout_add(120/COUNT_FRAMES, timeout_draving_cb, widget);
     }
     return TRUE;
 }

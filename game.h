@@ -18,6 +18,9 @@ class Game {
 
         bool moved;
 
+        GLfloat animation[COUNT_FRAMES][3];
+        int anim;
+
     protected:
         void InitGraphic();
         void DrawField();
@@ -25,6 +28,7 @@ class Game {
         void DrawFace1(); // правая грань
         void DrawFace2(); // задняя грань
         void DrawFace3(); // левая грань
+        void CalcAnimation(GLfloat start[3], GLfloat end[3]); // расчитывает промежуточные точки
     public:
         Game(); // инициализация поля, установка головы и точки
         void Draw(); // вывод на экран поля (проецирование змеи на поле,
