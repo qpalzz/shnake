@@ -76,7 +76,7 @@ gint glarea_destroy (GtkWidget* widget)
 
 gint key_pressed (GtkWidget *widget, GdkEvent  *event, gpointer user_data)
 {
-    g_print("Key pressed: ");
+    g_print("Key pressed: %d ",((GdkEventKey*)event)->keyval);
     switch (((GdkEventKey*)event)->keyval) {
         case GDK_KEY_Up: {
             game->SetDirection(DOWN);

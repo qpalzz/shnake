@@ -2,6 +2,7 @@
 #define GAME_H_INCLUDED
 
 #include "tail.h"
+#include "camera.h"
 
 class Game {
     private:
@@ -18,8 +19,7 @@ class Game {
 
         bool moved;
 
-        GLfloat animation[COUNT_FRAMES][3];
-        int anim;
+        Camera *camera;
 
     protected:
         void InitGraphic();
@@ -28,7 +28,6 @@ class Game {
         void DrawFace1(); // правая грань
         void DrawFace2(); // задняя грань
         void DrawFace3(); // левая грань
-        void CalcAnimation(GLfloat start[3], GLfloat end[3]); // расчитывает промежуточные точки
     public:
         Game(); // инициализация поля, установка головы и точки
         void Draw(); // вывод на экран поля (проецирование змеи на поле,

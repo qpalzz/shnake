@@ -18,8 +18,7 @@
 #define RADIUS          20
 
 #define COUNT_FRAMES    4
-
-#define IDLE    40000
+#define COUNT_STEPS     10
 
 enum Type {
     CLEAN,

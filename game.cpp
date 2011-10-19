@@ -93,7 +93,12 @@ Game::Game()
 
     head = new Tail();
     point = new Tail();
+
     head->SetParams(HEIGHT / 2, HEIGHT / 2, TAIL, direct);
+
+    GLfloat start[3];
+    head->GetPoint(f,start);
+    camera = new Camera(start);
     point->SetParams(2, 2, POINT, NONE);
 
     InitGraphic();
@@ -101,23 +106,12 @@ Game::Game()
 
 void Game::Draw()
 {
-    GLfloat norm[3];
-    norm[X] = animation[anim][X];
-    norm[Y] = animation[anim][Y];
-    norm[Z] = animation[anim][Z];
-    if (state == PLAY) anim++;
-    GLfloat r = RADIUS / sqrt(norm[X]*norm[X] + norm[Y]*norm[Y] + norm[Z]*norm[Z]);
-
-    norm[X] *= r;
-    norm[Y] *= r;
-    norm[Z] *= r;
-
     head->Projection(f);
     point->Projection(f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
 
-    gluLookAt( norm[X],norm[Y],norm[Z], 0,0,0, 0,1,0 );
+    camera->View();
+    camera->StepAnimation();
 
     DrawField();
 
@@ -141,8 +135,7 @@ void Game::Move()
 
         GLfloat end[3];
         head->GetPoint(f,end);
-        CalcAnimation(start, end);
-        anim = 0;
+        camera->CalcAnimation(start, end, COUNT_FRAMES);
 
         if (t == POINT) {
             point->SetType(TAIL);
@@ -255,19 +248,5 @@ void Game::DrawFace3() // левая грань
         for (int j = HEIGHT*3; j < WIDTH; j++) {
             f[i][j].Draw();
         }
-    }
-}
-
-void Game::CalcAnimation(GLfloat start[3], GLfloat end[3])
-{
-    GLfloat dN[3];
-    dN[X] = (end[X] - start[X]) / COUNT_FRAMES;
-    dN[Y] = (end[Y] - start[Y]) / COUNT_FRAMES;
-    dN[Z] = (end[Z] - start[Z]) / COUNT_FRAMES;
-
-    for (int i = 0; i < COUNT_FRAMES; i++) {
-        animation[i][X] = start[X] + dN[X]*i;
-        animation[i][Y] = start[Y] + dN[Y]*i;
-        animation[i][Z] = start[Z] + dN[Z]*i;
     }
 }
