@@ -26,6 +26,7 @@ class Tail {
                                 // иначе двигает хвост защищенным методом Move
         void SetType(Type t);
         void SetNext(Tail *n);
+        Tail * GetNext();
         void GetPoint(Cell f[HEIGHT][WIDTH], GLfloat n[3]);
         void GetIJ(int *i, int *j);
 };

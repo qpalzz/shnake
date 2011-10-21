@@ -8,7 +8,10 @@ Camera::Camera(GLfloat start[3])
     animation[0][Z] = start[Z];
     loop = FALSE;
     anim = 0;
-    radius = RADIUS;
+    for (int i = 0; i < COUNT_STEPS; i++) {
+        radius_an[i] = RADIUS_START;
+    }
+    rad = RADIUS_START;
 }
 
 void Camera::CalcAnimation(GLfloat start[3], GLfloat end[3], int count)
@@ -25,17 +28,31 @@ void Camera::CalcAnimation(GLfloat start[3], GLfloat end[3], int count)
         animation[i][X] = start[X] + dN[X]*i;
         animation[i][Y] = start[Y] + dN[Y]*i;
         animation[i][Z] = start[Z] + dN[Z]*i;
-        GLfloat r = radius / sqrt(animation[i][X]*animation[i][X]
+        GLfloat r = radius_an[i] / sqrt(animation[i][X]*animation[i][X]
                                   + animation[i][Y]*animation[i][Y]
                                   + animation[i][Z]*animation[i][Z]);
         animation[i][X] *= r;
         animation[i][Y] *= r;
         animation[i][Z] *= r;
     }
+    for (int i = 0; i < count_f; i++) {
+        radius_an[i] = rad;
+    }
     anim = 0;
 }
 
-void Camera::StepAnimation()
+void Camera::CalcAnimation(GLfloat start[3], GLfloat end[3], GLfloat radius, int count)
+{
+    GLfloat dR = (radius - rad) / (GLfloat)count;
+    for (int i = 0; i < count; i++)
+    {
+        radius_an[i] = rad + i*dR;
+    }
+    rad = radius_an[count-1];
+    CalcAnimation(start, end, count);
+}
+
+int Camera::StepAnimation()
 {
     if (anim < count_f-1) {
         anim++;
@@ -44,7 +61,9 @@ void Camera::StepAnimation()
         if (loop) {
             anim = 0;
         }
+        else return TRUE;
     }
+    return FALSE;
 }
 
 void Camera::View()

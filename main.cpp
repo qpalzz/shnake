@@ -98,6 +98,21 @@ gint key_pressed (GtkWidget *widget, GdkEvent  *event, gpointer user_data)
             g_print("right");
             break;
         }
+        case 32: {
+            game->Pause();
+            g_print("space");
+            break;
+        }
+        case 65293: {
+            game->Start();
+            g_print("enter");
+            break;
+        }
+        case 65307: {
+            game->New();
+            g_print("esc");
+            break;
+        }
     }
     g_print("\n");
     return TRUE;

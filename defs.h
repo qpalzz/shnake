@@ -16,9 +16,10 @@
 
 #define CELL_WIDTH      0.6
 #define RADIUS          20
+#define RADIUS_START    30
 
 #define COUNT_FRAMES    4
-#define COUNT_STEPS     10
+#define COUNT_STEPS     25
 
 enum Type {
     CLEAN,
@@ -42,9 +43,13 @@ enum Coords {
 };
 
 enum GameState {
+    START,
     PLAY,
+    PAUSE,
+    END,
     STOP,
-    MENU
+
+    NEW
 };
 
 #endif // DEFENITIONS_H_INCLUDED

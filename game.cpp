@@ -2,9 +2,7 @@
 
 Game::Game()
 {
-    score = 0;
-    direct = LEFT;
-    state = PLAY;
+
 
     our_font.init("AlphaMaleModern.ttf", 26); // Создать шрифт FreeType
 
@@ -91,15 +89,7 @@ Game::Game()
         }
     }
 
-    head = new Tail();
-    point = new Tail();
-
-    head->SetParams(HEIGHT / 2, HEIGHT / 2, TAIL, direct);
-
-    GLfloat start[3];
-    head->GetPoint(f,start);
-    camera = new Camera(start);
-    point->SetParams(2, 2, POINT, NONE);
+    GameInit();
 
     InitGraphic();
 }
@@ -111,7 +101,30 @@ void Game::Draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     camera->View();
-    camera->StepAnimation();
+//    camera->StepAnimation()
+
+    switch (state) {
+        case NEW:
+            // не делать шаги камеры
+            break;
+        case START:
+            if (camera->StepAnimation()) // пока не пройдет стартовая анимация
+                state = PLAY;
+            break;
+        case PLAY:
+            camera->StepAnimation();
+            break;
+        case PAUSE:
+            // не делать шаги камеры
+            break;
+        case END:
+            if (camera->StepAnimation()) // пока не пройдет финишная анимация
+                state = STOP;
+            break;
+        case STOP:
+            // не делать шаги камеры
+            break;
+    }
 
     DrawField();
 
@@ -148,11 +161,15 @@ void Game::Move()
             score += 100;
         }
         else if (t == TAIL) {
-            state = STOP;
+            state = END;
             head->SetType(OVER);
+            GLfloat end[3];
+            end[X] = start[X];
+            end[Y] = HEIGHT*CELL_WIDTH / 2.5;
+            end[Z] = start[Z];
+            camera->CalcAnimation(start, end, RADIUS_START, 15);
         }
     }
-//    glutPostRedisplay();
 }
 
 void Game::SetDirection(Direction d)
@@ -164,6 +181,27 @@ void Game::SetDirection(Direction d)
     }
 }
 
+GameState Game::GetState()
+{
+    return state;
+}
+
+void Game::New()
+{
+    ClearGame();
+    state = NEW;
+}
+
+void Game::Start()
+{
+    if (state == NEW) state = START;
+}
+
+void Game::Pause()
+{
+    if (state == PAUSE) state = PLAY;
+    else if (state == PLAY) state = PAUSE;
+}
 // --------------- protected ------------------------------------
 
 void Game::InitGraphic()
@@ -249,4 +287,48 @@ void Game::DrawFace3() // левая грань
             f[i][j].Draw();
         }
     }
+}
+
+void Game::ClearGame()
+{
+    DeleteShnake();
+    for (int i = 0; i < HEIGHT; i++) {
+        for (int j = 0; j < WIDTH; j++) {
+            f[i][j].SetType(CLEAN);
+        }
+    }
+    GameInit();
+}
+
+void Game::DeleteShnake()
+{
+    while (head) {
+        Tail *tmp = head->GetNext();
+        delete []head;
+        head = tmp;
+    }
+    delete []point;
+    delete []camera;
+}
+
+void Game::GameInit()
+{
+    score = 0;
+    direct = LEFT;
+    state = NEW;
+
+    head = new Tail();
+    point = new Tail();
+
+    head->SetParams(HEIGHT / 2, HEIGHT / 2, TAIL, direct);
+
+    GLfloat start[3];
+    head->GetPoint(f,start);
+    camera = new Camera(start);
+    GLfloat end[3];
+            end[X] = start[X];
+            end[Y] = HEIGHT*CELL_WIDTH / 2.5;
+            end[Z] = start[Z];
+    camera->CalcAnimation(end, start, RADIUS, 15);
+    point->SetParams(rand()%HEIGHT, rand()%HEIGHT, POINT, NONE);
 }

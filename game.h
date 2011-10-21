@@ -28,6 +28,9 @@ class Game {
         void DrawFace1(); // правая грань
         void DrawFace2(); // задняя грань
         void DrawFace3(); // левая грань
+        void ClearGame(); // удвление змейки, установка начальных значений
+        void DeleteShnake();
+        void GameInit();
     public:
         Game(); // инициализация поля, установка головы и точки
         void Draw(); // вывод на экран поля (проецирование змеи на поле,
@@ -36,6 +39,12 @@ class Game {
                      // перестановка направления
 
         void SetDirection(Direction d);
+
+        GameState GetState();
+
+        void New();
+        void Start();
+        void Pause();
 };
 
 #endif // GAME_H_INCLUDED

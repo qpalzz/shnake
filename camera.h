@@ -5,8 +5,9 @@
 
 class Camera {
     private:
-        GLfloat radius;
         GLfloat animation[COUNT_STEPS][3];
+        GLfloat radius_an[COUNT_STEPS];
+        GLfloat rad;
         int anim; // шаг анимации
         int count_f; // количество кадров в текущей анимации
         gboolean loop; // зацикливать ли анимацию
@@ -15,7 +16,8 @@ class Camera {
         Camera(GLfloat start[3]);
         void View(); // установка положения камеры
         void CalcAnimation(GLfloat start[3], GLfloat end[3], int count);
-        void StepAnimation();
+        void CalcAnimation(GLfloat start[3], GLfloat end[3], GLfloat radius, int count);
+        int StepAnimation();
 
 };
 

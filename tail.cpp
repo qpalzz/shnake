@@ -52,6 +52,11 @@ void Tail::SetNext(Tail *n)
     next = n;
 }
 
+Tail * Tail::GetNext()
+{
+    return next;
+}
+
 void Tail::GetPoint(Cell f[HEIGHT][WIDTH], GLfloat n[3])
 {
     f[i][j].GetPoint(n);
