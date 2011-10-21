@@ -94,6 +94,11 @@ Game::Game()
     InitGraphic();
 }
 
+Game::~Game()
+{
+    DeleteShnake();
+}
+
 void Game::Draw()
 {
     head->Projection(f);

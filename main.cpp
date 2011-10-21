@@ -1,6 +1,7 @@
 #include "game.h"
 
 Game *game;
+guint move_timer, draw_timer;
 
 gint glarea_button_press (GtkWidget*, GdkEventButton*);
 gint glarea_draw  (GtkWidget*, GdkEventExpose*);
@@ -61,8 +62,8 @@ gint glarea_init (GtkWidget* widget)
     if (gtk_gl_area_make_current (GTK_GL_AREA(widget))) {
         srand(time(NULL));
         game = new Game();
-        g_timeout_add(120, timeout_moving_cb, widget);
-        g_timeout_add(120/COUNT_FRAMES, timeout_draving_cb, widget);
+        move_timer = g_timeout_add(120, timeout_moving_cb, widget);
+        draw_timer = g_timeout_add(120/COUNT_FRAMES, timeout_draving_cb, widget);
     }
     return TRUE;
 }
@@ -70,51 +71,47 @@ gint glarea_init (GtkWidget* widget)
 gint glarea_destroy (GtkWidget* widget)
 {
     g_print ("GTK GL Area Destroy Event\n");
-    // код для освобождения ресурсов
+
+    g_source_remove(move_timer);
+    g_source_remove(draw_timer);
+
+    delete game;
+
     return TRUE;
 }
 
 gint key_pressed (GtkWidget *widget, GdkEvent  *event, gpointer user_data)
 {
-    g_print("Key pressed: %d ",((GdkEventKey*)event)->keyval);
     switch (((GdkEventKey*)event)->keyval) {
         case GDK_KEY_Up: {
             game->SetDirection(DOWN);
-            g_print("up");
             break;
         }
         case GDK_KEY_Down: {
             game->SetDirection(UP);
-            g_print("down");
             break;
         }
         case GDK_KEY_Left: {
             game->SetDirection(LEFT);
-            g_print("left");
             break;
         }
         case GDK_KEY_Right: {
             game->SetDirection(RIGHT);
-            g_print("right");
             break;
         }
-        case 32: {
+        case GDK_KEY_Pause: {
             game->Pause();
-            g_print("space");
             break;
         }
-        case 65293: {
+        case GDK_KEY_Return: {
             game->Start();
-            g_print("enter");
             break;
         }
-        case 65307: {
+        case GDK_KEY_Escape: {
             game->New();
-            g_print("esc");
             break;
         }
     }
-    g_print("\n");
     return TRUE;
 }
 
@@ -181,7 +178,7 @@ int main(int argc, char** argv)
     gtk_signal_connect (GTK_OBJECT(glarea), "realize",  G_CALLBACK(glarea_init),   NULL);
     gtk_signal_connect (GTK_OBJECT(glarea), "destroy",  G_CALLBACK (glarea_destroy),  NULL);
     gtk_signal_connect (GTK_OBJECT(window), "key-press-event",  G_CALLBACK (key_pressed),  NULL);
-    gtk_widget_set_usize(GTK_WIDGET(glarea), 700, 700);
+    gtk_widget_set_usize(GTK_WIDGET(glarea), 600, 600);
     gtk_box_pack_start (GTK_BOX(box_main), glarea,      FALSE, TRUE, 0);
     gtk_widget_show (glarea);
 
