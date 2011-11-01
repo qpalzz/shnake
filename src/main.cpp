@@ -13,9 +13,9 @@ gboolean timeout_draving_cb(gpointer data);
 gboolean timeout_moving_cb(gpointer data);
 void SetProjectionMatrix(GLsizei, GLsizei);
 void SetModelviewMatrix();
-GtkWidget* create_menubar();
-GtkWidget* create_my_menuitem(GtkWidget *menu,gchar *labelmenu,gchar *labelmenu_r,gchar *active);
-void  menuitem_response (GtkMenuItem *menuitem,gpointer user_data);
+void menu_new_cb(void);
+void menu_pause_cb(void);
+void menu_end_cb(void);
 
 int main(int, char**);
 
@@ -102,20 +102,8 @@ gint key_pressed (GtkWidget *widget, GdkEvent  *event, gpointer user_data)
             game->SetDirection(RIGHT);
             break;
         }
-        case GDK_KEY_Pause: {
-            game->Pause();
-            break;
-        }
-        case GDK_KEY_Return: {
-            game->Start();
-            break;
-        }
-        case GDK_KEY_Escape: {
-            game->New();
-            break;
-        }
     }
-    return TRUE;
+    return FALSE;
 }
 
 gboolean timeout_draving_cb(gpointer data)
@@ -142,13 +130,15 @@ void SetModelviewMatrix(){
 	glLoadIdentity();
 }
 
+// Организация меню
+
 static GtkItemFactoryEntry menu_items[] = {
   { "/_Игра",               NULL,         NULL,           0, "<Branch>" },
-  { "/Игра/_Новая игра",    "<control>N", NULL,           0, "<Item>" },
-  { "/Игра/_Пауза",         "Pause",      NULL,           0, "<Item>" },
+  { "/Игра/_Новая игра",    "<control>N", menu_new_cb,    0, "<Item>" },
+  { "/Игра/_Пауза",         "Pause",      menu_pause_cb,  0, "<Item>" },
   { "/Игра/разд1",          NULL,         NULL,           0, "<Separator>" },
   { "/Игра/Результаты",     NULL,         NULL,           0, "<Item>" },
-  { "/Игра/Закончить игру", NULL,         NULL,           0, "<Item>" },
+  { "/Игра/Закончить игру", NULL,         menu_end_cb,    0, "<Item>" },
   { "/Игра/разд2",          NULL,         NULL,           0, "<Separator>" },
   { "/Игра/Выход",          "<control>Q", gtk_main_quit,  0, "<Item>" },
   { "/_Правка",             NULL,         NULL,           0, "<Branch>" },
@@ -156,11 +146,55 @@ static GtkItemFactoryEntry menu_items[] = {
   { "/_Справка",            NULL,         NULL,           0, "<Branch>" },
   { "/Справка/_О программе",NULL,         NULL,           0, "<Item>" },
 };
+
 static gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
+static GtkItemFactory *item_factory;
+
+void update_menu() // обновление отображения меню
+{
+    GtkWidget *mn_pause = gtk_item_factory_get_item(item_factory,"/Игра/Пауза");
+    GtkWidget *mn_end = gtk_item_factory_get_item(item_factory,"/Игра/Закончить игру");
+    GameState st = game->GetState();
+    g_print("%d   ",st);
+    if (st == NEW || st == END || st == STOP) {
+        gtk_widget_set_sensitive(GTK_WIDGET(mn_pause),FALSE);
+        gtk_widget_set_sensitive(GTK_WIDGET(mn_end),FALSE);
+        gtk_menu_item_set_label(GTK_MENU_ITEM(mn_pause),"Пауза");
+    }
+    else {
+        gtk_widget_set_sensitive(GTK_WIDGET(mn_pause),TRUE);
+        if (st == PLAY) {
+            gtk_menu_item_set_label(GTK_MENU_ITEM(mn_pause),"Пауза");
+        }
+        else if (st == PAUSE) {
+            gtk_menu_item_set_label(GTK_MENU_ITEM(mn_pause),"Продолжить");
+        }
+        gtk_widget_set_sensitive(GTK_WIDGET(mn_end),TRUE);
+    }
+    g_print("Меню обновлено\n");
+}
+
+void menu_new_cb(void)
+{
+    game->New();
+    game->Start();
+    update_menu();
+}
+
+void menu_pause_cb(void)
+{
+    game->Pause();
+    update_menu();
+}
+
+void menu_end_cb(void)
+{
+    game->End();
+    update_menu();
+}
 
 GtkWidget *get_menubar_menu( GtkWidget  *window)
 {
-    GtkItemFactory *item_factory;
     GtkAccelGroup *accel_group;
     /* Создаём группу акселераторов (shortcut keys) */
     accel_group = gtk_accel_group_new ();
@@ -216,8 +250,7 @@ int main(int argc, char** argv)
 
     glarea = gtk_gl_area_new(attrlist);
     gtk_widget_set_events(GTK_WIDGET(glarea),
-                          GDK_EXPOSURE_MASK|
-                          GDK_BUTTON_PRESS_MASK);
+                          GDK_EXPOSURE_MASK);
     gtk_signal_connect (GTK_OBJECT(glarea), "button_press_event", G_CALLBACK(glarea_button_press),  NULL);
     gtk_signal_connect (GTK_OBJECT(glarea), "expose_event",  G_CALLBACK(glarea_draw),   NULL);
     gtk_signal_connect (GTK_OBJECT(glarea), "configure_event", G_CALLBACK(glarea_reshape),  NULL);
@@ -229,7 +262,7 @@ int main(int argc, char** argv)
     gtk_widget_show (glarea);
 
     gtk_widget_show_all(window);
-
+    update_menu();
     gtk_main ();
 
     return (0);

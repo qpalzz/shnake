@@ -31,6 +31,7 @@ class Game {
         void ClearGame(); // удвление змейки, установка начальных значений
         void DeleteShnake();
         void GameInit();
+        void GameEnd();
     public:
         Game(); // инициализация поля, установка головы и точки
         ~Game();
@@ -46,6 +47,7 @@ class Game {
         void New();
         void Start();
         void Pause();
+        void End();
 };
 
 #endif // GAME_H_INCLUDED

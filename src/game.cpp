@@ -166,13 +166,7 @@ void Game::Move()
             score += 100;
         }
         else if (t == TAIL) {
-            state = END;
-            head->SetType(OVER);
-            GLfloat end[3];
-            end[X] = start[X];
-            end[Y] = HEIGHT*CELL_WIDTH / 2.5;
-            end[Z] = start[Z];
-            camera->CalcAnimation(start, end, RADIUS_START, 15);
+            GameEnd();
         }
     }
 }
@@ -206,6 +200,11 @@ void Game::Pause()
 {
     if (state == PAUSE) state = PLAY;
     else if (state == PLAY) state = PAUSE;
+}
+
+void Game::End()
+{
+    if (state != END) GameEnd();
 }
 // --------------- protected ------------------------------------
 
@@ -336,4 +335,17 @@ void Game::GameInit()
             end[Z] = start[Z];
     camera->CalcAnimation(end, start, RADIUS, 15);
     point->SetParams(rand()%HEIGHT, rand()%HEIGHT, POINT, NONE);
+}
+
+void Game::GameEnd()
+{
+    GLfloat start[3];
+    head->GetPoint(f,start);
+    state = END;
+    head->SetType(OVER);
+    GLfloat end[3];
+    end[X] = start[X];
+    end[Y] = HEIGHT*CELL_WIDTH / 2.5;
+    end[Z] = start[Z];
+    camera->CalcAnimation(start, end, RADIUS_START, 15);
 }
