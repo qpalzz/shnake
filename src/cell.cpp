@@ -51,32 +51,34 @@ Type Cell::GetType() const
 
 void Cell::Draw()
 {
-    GLfloat color_fill[4] = { 0.0, 0.0, 0.0, 0.3 };
-    GLfloat color_border[4] = { 0.0, 0.0, 0.0, 0.7 };
+    Config *conf = Config::Instance();
+
+    GLfloat color_fill[4] = { 0.0, 0.0, 0.0, 0.0 };
+    GLfloat color_border[4] = { 0.0, 0.0, 0.0, 0.0 };
     switch (type) {
         case CLEAN:
-            color_fill[2] = 0.3;
-            color_fill[0] = 0.3;
-            color_border[0] = 0.7;
-            color_border[2] = 0.7;
+            for (int i = 0; i < 4; i++) {
+                color_fill[i] = (GLfloat) conf->clean_color_fill[i];
+                color_border[i] = (GLfloat) conf->clean_color_border[i];
+            }
             break;
         case TAIL:
-            color_fill[1] = 0.9;
-            color_fill[3] = 0.5;
-            color_border[1] = 0.4;
-            color_border[3] = 0.9;
+            for (int i = 0; i < 4; i++) {
+                color_fill[i] = (GLfloat) conf->tail_color_fill[i];
+                color_border[i] = (GLfloat) conf->tail_color_border[i];
+            }
             break;
         case POINT:
-            color_fill[0] = 1;
-            color_fill[1] = 0.6;
-            color_fill[3] = 0.6;
-            color_border[0] = 0.9;
-            color_border[1] = 0.4;
-            color_border[3] = 0.9;
+            for (int i = 0; i < 4; i++) {
+                color_fill[i] = (GLfloat) conf->point_color_fill[i];
+                color_border[i] = (GLfloat) conf->point_color_border[i];
+            }
             break;
         case OVER:
-            color_fill[0] = 0.9;
-            color_border[0] = 0.7;
+            for (int i = 0; i < 4; i++) {
+                color_fill[i] = (GLfloat) conf->over_color_fill[i];
+                color_border[i] = (GLfloat) conf->over_color_border[i];
+            }
             break;
     }
     glLineWidth(1.5);

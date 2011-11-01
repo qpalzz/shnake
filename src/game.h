@@ -3,6 +3,7 @@
 
 #include "tail.h"
 #include "camera.h"
+#include "config.h"
 
 class Game {
     private:

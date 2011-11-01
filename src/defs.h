@@ -11,12 +11,10 @@
 #include <time.h>
 #include "freetype.h"
 
+#define CONFIG_NAME     "config"
+
 #define HEIGHT          12
 #define WIDTH           HEIGHT*4
-
-#define CELL_WIDTH      0.6
-#define RADIUS          20
-#define RADIUS_START    30
 
 #define COUNT_FRAMES    4
 #define COUNT_STEPS     25

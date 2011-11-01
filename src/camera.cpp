@@ -8,10 +8,13 @@ Camera::Camera(GLfloat start[3])
     animation[0][Z] = start[Z];
     loop = FALSE;
     anim = 0;
+
+    Config *conf = Config::Instance();
+
     for (int i = 0; i < COUNT_STEPS; i++) {
-        radius_an[i] = RADIUS_START;
+        radius_an[i] = conf->radius_start;
     }
-    rad = RADIUS_START;
+    rad = conf->radius_start;
 }
 
 void Camera::CalcAnimation(GLfloat start[3], GLfloat end[3], int count)

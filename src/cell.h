@@ -2,6 +2,7 @@
 #define CELL_H_INCLUDED
 
 #include "defs.h"
+#include "config.h"
 
 class Cell {
     private:

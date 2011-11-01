@@ -2,7 +2,8 @@
 
 Game::Game()
 {
-
+    Config *conf = Config::Instance();
+    GLfloat c_width = (GLfloat)conf->cell_width;
 
     our_font.init("AlphaMaleModern.ttf", 26); // Создать шрифт FreeType
 
@@ -12,78 +13,78 @@ Game::Game()
                 c[3],
                 d[3];
         for (int j = 0; j < HEIGHT; j++) { // передняя грань
-            a[X] = -(HEIGHT/2)*CELL_WIDTH + j*CELL_WIDTH + 0.1*CELL_WIDTH;
-            a[Y] = -(HEIGHT/2)*CELL_WIDTH + i*CELL_WIDTH + 0.1*CELL_WIDTH;
-            a[Z] = (HEIGHT/2)*CELL_WIDTH;
+            a[X] = -(HEIGHT/2)*c_width + j*c_width + 0.1*c_width;
+            a[Y] = -(HEIGHT/2)*c_width + i*c_width + 0.1*c_width;
+            a[Z] = (HEIGHT/2)*c_width;
 
-            b[X] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + j*CELL_WIDTH - 0.1*CELL_WIDTH;
-            b[Y] = -(HEIGHT/2)*CELL_WIDTH + i*CELL_WIDTH + 0.1*CELL_WIDTH;
-            b[Z] = (HEIGHT/2)*CELL_WIDTH;
+            b[X] = -(HEIGHT/2)*c_width + c_width + j*c_width - 0.1*c_width;
+            b[Y] = -(HEIGHT/2)*c_width + i*c_width + 0.1*c_width;
+            b[Z] = (HEIGHT/2)*c_width;
 
-            c[X] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + j*CELL_WIDTH - 0.1*CELL_WIDTH;
-            c[Y] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + i*CELL_WIDTH - 0.1*CELL_WIDTH;
-            c[Z] = (HEIGHT/2)*CELL_WIDTH;
+            c[X] = -(HEIGHT/2)*c_width + c_width + j*c_width - 0.1*c_width;
+            c[Y] = -(HEIGHT/2)*c_width + c_width + i*c_width - 0.1*c_width;
+            c[Z] = (HEIGHT/2)*c_width;
 
-            d[X] = -(HEIGHT/2)*CELL_WIDTH + j*CELL_WIDTH + 0.1*CELL_WIDTH;
-            d[Y] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + i*CELL_WIDTH - 0.1*CELL_WIDTH;
-            d[Z] = (HEIGHT/2)*CELL_WIDTH;
+            d[X] = -(HEIGHT/2)*c_width + j*c_width + 0.1*c_width;
+            d[Y] = -(HEIGHT/2)*c_width + c_width + i*c_width - 0.1*c_width;
+            d[Z] = (HEIGHT/2)*c_width;
 
             f[i][j].SetPoints(a,b,c,d);
         }
         for (int j = HEIGHT; j < HEIGHT*2; j++) { // правая грань
-            a[X] = (HEIGHT/2)*CELL_WIDTH;
-            a[Y] = -(HEIGHT/2)*CELL_WIDTH + i*CELL_WIDTH + 0.1*CELL_WIDTH;
-            a[Z] = (HEIGHT/2)*CELL_WIDTH - (j%HEIGHT)*CELL_WIDTH - 0.1*CELL_WIDTH;
+            a[X] = (HEIGHT/2)*c_width;
+            a[Y] = -(HEIGHT/2)*c_width + i*c_width + 0.1*c_width;
+            a[Z] = (HEIGHT/2)*c_width - (j%HEIGHT)*c_width - 0.1*c_width;
 
-            b[X] = (HEIGHT/2)*CELL_WIDTH;
-            b[Y] = -(HEIGHT/2)*CELL_WIDTH + i*CELL_WIDTH + 0.1*CELL_WIDTH;
-            b[Z] = (HEIGHT/2)*CELL_WIDTH - CELL_WIDTH - (j%HEIGHT)*CELL_WIDTH + 0.1*CELL_WIDTH;
+            b[X] = (HEIGHT/2)*c_width;
+            b[Y] = -(HEIGHT/2)*c_width + i*c_width + 0.1*c_width;
+            b[Z] = (HEIGHT/2)*c_width - c_width - (j%HEIGHT)*c_width + 0.1*c_width;
 
-            c[X] = (HEIGHT/2)*CELL_WIDTH;
-            c[Y] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + i*CELL_WIDTH - 0.1*CELL_WIDTH;
-            c[Z] = (HEIGHT/2)*CELL_WIDTH - CELL_WIDTH - (j%HEIGHT)*CELL_WIDTH + 0.1*CELL_WIDTH;
+            c[X] = (HEIGHT/2)*c_width;
+            c[Y] = -(HEIGHT/2)*c_width + c_width + i*c_width - 0.1*c_width;
+            c[Z] = (HEIGHT/2)*c_width - c_width - (j%HEIGHT)*c_width + 0.1*c_width;
 
-            d[X] = (HEIGHT/2)*CELL_WIDTH;
-            d[Y] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + i*CELL_WIDTH - 0.1*CELL_WIDTH;
-            d[Z] = (HEIGHT/2)*CELL_WIDTH - (j%HEIGHT)*CELL_WIDTH - 0.1*CELL_WIDTH;
+            d[X] = (HEIGHT/2)*c_width;
+            d[Y] = -(HEIGHT/2)*c_width + c_width + i*c_width - 0.1*c_width;
+            d[Z] = (HEIGHT/2)*c_width - (j%HEIGHT)*c_width - 0.1*c_width;
 
             f[i][j].SetPoints(a,b,c,d);
         }
         for (int j = HEIGHT*2; j < HEIGHT*3; j++) { // задняя грань
-            a[X] = (HEIGHT/2)*CELL_WIDTH - (j%HEIGHT)*CELL_WIDTH - 0.1*CELL_WIDTH;
-            a[Y] = -(HEIGHT/2)*CELL_WIDTH + i*CELL_WIDTH + 0.1*CELL_WIDTH;
-            a[Z] = -(HEIGHT/2)*CELL_WIDTH;
+            a[X] = (HEIGHT/2)*c_width - (j%HEIGHT)*c_width - 0.1*c_width;
+            a[Y] = -(HEIGHT/2)*c_width + i*c_width + 0.1*c_width;
+            a[Z] = -(HEIGHT/2)*c_width;
 
-            b[X] = (HEIGHT/2)*CELL_WIDTH - CELL_WIDTH - (j%HEIGHT)*CELL_WIDTH + 0.1*CELL_WIDTH;
-            b[Y] = -(HEIGHT/2)*CELL_WIDTH + i*CELL_WIDTH + 0.1*CELL_WIDTH;
-            b[Z] = -(HEIGHT/2)*CELL_WIDTH;
+            b[X] = (HEIGHT/2)*c_width - c_width - (j%HEIGHT)*c_width + 0.1*c_width;
+            b[Y] = -(HEIGHT/2)*c_width + i*c_width + 0.1*c_width;
+            b[Z] = -(HEIGHT/2)*c_width;
 
-            c[X] = (HEIGHT/2)*CELL_WIDTH - CELL_WIDTH - (j%HEIGHT)*CELL_WIDTH + 0.1*CELL_WIDTH;
-            c[Y] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + i*CELL_WIDTH - 0.1*CELL_WIDTH;
-            c[Z] = -(HEIGHT/2)*CELL_WIDTH;
+            c[X] = (HEIGHT/2)*c_width - c_width - (j%HEIGHT)*c_width + 0.1*c_width;
+            c[Y] = -(HEIGHT/2)*c_width + c_width + i*c_width - 0.1*c_width;
+            c[Z] = -(HEIGHT/2)*c_width;
 
-            d[X] = (HEIGHT/2)*CELL_WIDTH - (j%HEIGHT)*CELL_WIDTH - 0.1*CELL_WIDTH;
-            d[Y] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + i*CELL_WIDTH - 0.1*CELL_WIDTH;
-            d[Z] = -(HEIGHT/2)*CELL_WIDTH;
+            d[X] = (HEIGHT/2)*c_width - (j%HEIGHT)*c_width - 0.1*c_width;
+            d[Y] = -(HEIGHT/2)*c_width + c_width + i*c_width - 0.1*c_width;
+            d[Z] = -(HEIGHT/2)*c_width;
 
             f[i][j].SetPoints(a,b,c,d);
         }
         for (int j = HEIGHT*3; j < WIDTH; j++) { // левая грань
-            a[X] = -(HEIGHT/2)*CELL_WIDTH;
-            a[Y] = -(HEIGHT/2)*CELL_WIDTH + i*CELL_WIDTH + 0.1*CELL_WIDTH;
-            a[Z] = -(HEIGHT/2)*CELL_WIDTH + (j%HEIGHT)*CELL_WIDTH + 0.1*CELL_WIDTH;
+            a[X] = -(HEIGHT/2)*c_width;
+            a[Y] = -(HEIGHT/2)*c_width + i*c_width + 0.1*c_width;
+            a[Z] = -(HEIGHT/2)*c_width + (j%HEIGHT)*c_width + 0.1*c_width;
 
-            b[X] = -(HEIGHT/2)*CELL_WIDTH;
-            b[Y] = -(HEIGHT/2)*CELL_WIDTH + i*CELL_WIDTH + 0.1*CELL_WIDTH;
-            b[Z] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + (j%HEIGHT)*CELL_WIDTH - 0.1*CELL_WIDTH;
+            b[X] = -(HEIGHT/2)*c_width;
+            b[Y] = -(HEIGHT/2)*c_width + i*c_width + 0.1*c_width;
+            b[Z] = -(HEIGHT/2)*c_width + c_width + (j%HEIGHT)*c_width - 0.1*c_width;
 
-            c[X] = -(HEIGHT/2)*CELL_WIDTH;
-            c[Y] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + i*CELL_WIDTH - 0.1*CELL_WIDTH;
-            c[Z] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + (j%HEIGHT)*CELL_WIDTH - 0.1*CELL_WIDTH;
+            c[X] = -(HEIGHT/2)*c_width;
+            c[Y] = -(HEIGHT/2)*c_width + c_width + i*c_width - 0.1*c_width;
+            c[Z] = -(HEIGHT/2)*c_width + c_width + (j%HEIGHT)*c_width - 0.1*c_width;
 
-            d[X] = -(HEIGHT/2)*CELL_WIDTH;
-            d[Y] = -(HEIGHT/2)*CELL_WIDTH + CELL_WIDTH + i*CELL_WIDTH - 0.1*CELL_WIDTH;
-            d[Z] = -(HEIGHT/2)*CELL_WIDTH + (j%HEIGHT)*CELL_WIDTH + 0.1*CELL_WIDTH;
+            d[X] = -(HEIGHT/2)*c_width;
+            d[Y] = -(HEIGHT/2)*c_width + c_width + i*c_width - 0.1*c_width;
+            d[Z] = -(HEIGHT/2)*c_width + (j%HEIGHT)*c_width + 0.1*c_width;
 
             f[i][j].SetPoints(a,b,c,d);
         }
@@ -317,6 +318,8 @@ void Game::DeleteShnake()
 
 void Game::GameInit()
 {
+    Config *conf = Config::Instance();
+
     score = 0;
     direct = LEFT;
     state = NEW;
@@ -331,21 +334,23 @@ void Game::GameInit()
     camera = new Camera(start);
     GLfloat end[3];
             end[X] = start[X];
-            end[Y] = HEIGHT*CELL_WIDTH / 2.5;
+            end[Y] = HEIGHT*conf->cell_width / 2.5;
             end[Z] = start[Z];
-    camera->CalcAnimation(end, start, RADIUS, 15);
+    camera->CalcAnimation(end, start, conf->radius, 15);
     point->SetParams(rand()%HEIGHT, rand()%HEIGHT, POINT, NONE);
 }
 
 void Game::GameEnd()
 {
+    Config *conf = Config::Instance();
+
     GLfloat start[3];
     head->GetPoint(f,start);
     state = END;
     head->SetType(OVER);
     GLfloat end[3];
     end[X] = start[X];
-    end[Y] = HEIGHT*CELL_WIDTH / 2.5;
+    end[Y] = HEIGHT*conf->cell_width / 2.5;
     end[Z] = start[Z];
-    camera->CalcAnimation(start, end, RADIUS_START, 15);
+    camera->CalcAnimation(start, end, conf->radius_start, 15);
 }

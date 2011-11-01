@@ -3,7 +3,6 @@
 Game *game;
 guint move_timer, draw_timer;
 
-gint glarea_button_press (GtkWidget*, GdkEventButton*);
 gint glarea_draw  (GtkWidget*, GdkEventExpose*);
 gint glarea_reshape  (GtkWidget*, GdkEventConfigure*);
 gint glarea_init  (GtkWidget*);
@@ -18,21 +17,6 @@ void menu_pause_cb(void);
 void menu_end_cb(void);
 
 int main(int, char**);
-
-gint glarea_button_press (GtkWidget* widget, GdkEventButton* event)
-{
-    int x = event->x;
-    int y = event->y;
-    if (event->button == 1) {
-        g_print ("Button 1 press   (%d, %d)\n", x, y);
-        return TRUE;
-    }
-    if (event->button == 2) {
-        g_print ("Button 2 press   (%d, %d)\n", x, y);
-        return TRUE;
-    }
-    return FALSE;
-}
 
 gint glarea_draw (GtkWidget* widget, GdkEventExpose* event)
 {
@@ -65,8 +49,9 @@ gint glarea_init (GtkWidget* widget)
     if (gtk_gl_area_make_current (GTK_GL_AREA(widget))) {
         srand(time(NULL));
         game = new Game();
-        move_timer = g_timeout_add(120, timeout_moving_cb, widget);
-        draw_timer = g_timeout_add(120/COUNT_FRAMES, timeout_draving_cb, widget);
+        Config *conf = Config::Instance();
+        move_timer = g_timeout_add(conf->step_time, timeout_moving_cb, widget);
+        draw_timer = g_timeout_add(conf->step_time/COUNT_FRAMES, timeout_draving_cb, widget);
     }
     return TRUE;
 }
@@ -80,6 +65,8 @@ gint glarea_destroy (GtkWidget* widget)
 
     delete game;
 
+    Config *conf = Config::Instance();
+    conf->FreeInst();
     return TRUE;
 }
 
@@ -155,7 +142,6 @@ void update_menu() // обновление отображения меню
     GtkWidget *mn_pause = gtk_item_factory_get_item(item_factory,"/Игра/Пауза");
     GtkWidget *mn_end = gtk_item_factory_get_item(item_factory,"/Игра/Закончить игру");
     GameState st = game->GetState();
-    g_print("%d   ",st);
     if (st == NEW || st == END || st == STOP) {
         gtk_widget_set_sensitive(GTK_WIDGET(mn_pause),FALSE);
         gtk_widget_set_sensitive(GTK_WIDGET(mn_end),FALSE);
@@ -171,7 +157,6 @@ void update_menu() // обновление отображения меню
         }
         gtk_widget_set_sensitive(GTK_WIDGET(mn_end),TRUE);
     }
-    g_print("Меню обновлено\n");
 }
 
 void menu_new_cb(void)
@@ -251,7 +236,6 @@ int main(int argc, char** argv)
     glarea = gtk_gl_area_new(attrlist);
     gtk_widget_set_events(GTK_WIDGET(glarea),
                           GDK_EXPOSURE_MASK);
-    gtk_signal_connect (GTK_OBJECT(glarea), "button_press_event", G_CALLBACK(glarea_button_press),  NULL);
     gtk_signal_connect (GTK_OBJECT(glarea), "expose_event",  G_CALLBACK(glarea_draw),   NULL);
     gtk_signal_connect (GTK_OBJECT(glarea), "configure_event", G_CALLBACK(glarea_reshape),  NULL);
     gtk_signal_connect (GTK_OBJECT(glarea), "realize",  G_CALLBACK(glarea_init),   NULL);
